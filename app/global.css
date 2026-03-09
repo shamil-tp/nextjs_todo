@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: nord --default, abyss --prefersdark, cupcake, dracula;
+  
+  --depth: 1; /* Toggles subtle depth on components */
+  --noise: 1; /* Enables textured noise globally */
+}
+
+/* Customizing the design system using OKLCH format for better color gamuts */
+:root {
+  --color-primary: oklch(60% 0.15 250); /* Overriding default primary */
+  --radius-field: 0.5rem;               /* Aligned with Tailwind 4 syntax */
+}
