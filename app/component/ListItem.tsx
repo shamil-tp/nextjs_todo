@@ -1,6 +1,6 @@
 export default function ListItem(){
     return (
-        <div className="list__item w-[400px] p-5 bg-slate-700 flex items-center justify-between rounded-lg">
+        <div className="list__item w-100 p-5 bg-slate-700 flex items-center justify-between rounded-lg">
             <div className="list__content">
                 <p className="text-lg font-bold"> clean the house</p>
             </div>
