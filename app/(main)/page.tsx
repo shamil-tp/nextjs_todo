@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react"
-import AddTodo from "./component/AddTodo"
+import AddTodo from "../component/AddTodo"
 
 export default function HomePage() {
   const [isStarted,setStart] = useState(false)

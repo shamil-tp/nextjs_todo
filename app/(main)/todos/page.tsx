@@ -1,5 +1,5 @@
-import ListItem from "../component/ListItem";
-import TodoList from "../component/TodoList";
+// import ListItem from "../component/ListItem";
+import TodoList from "../../component/TodoList";
 
 export default function TodosPage() {
   return (
