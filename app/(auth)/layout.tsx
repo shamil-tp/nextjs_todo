@@ -1,8 +1,4 @@
 
-export const metadata = {
-    title:'Login page | Todo app',
-    description:'this is the auth page for todo app'
-}
 
 export default function AuthLayout({children}:{children:React.ReactNode}){
     return (
