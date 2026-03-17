@@ -1,4 +1,5 @@
 import Link from "next/link"
+import LogoutButton from "./LogoutButton"
 export default function Navbar(){
     return (
         <div className="navbar bg-base-100 shadow-sm">
@@ -10,7 +11,8 @@ export default function Navbar(){
       <li><Link href="/">Home</Link></li>
       <li><Link href="/todos">Todo</Link></li>
       <li><Link href="/about">About</Link></li>
-      <li>
+      <li><LogoutButton/></li>
+      {/* <li>
         <details>
           <summary>Parent</summary>
           <ul className="bg-base-100 rounded-t-none p-2">
@@ -18,7 +20,7 @@ export default function Navbar(){
             <li><a>Link 2</a></li>
           </ul>
         </details>
-      </li>
+      </li> */}
     </ul>
   </div>
 </div>
