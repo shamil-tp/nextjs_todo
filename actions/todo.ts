@@ -1,14 +1,19 @@
 'use server'
+import { authOptions } from '@/lib/auth'
 import pool from '@/lib/db'
 import bcrypt from 'bcrypt'
+import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 export const addTodo = async (formData:FormData)=>{
+    const session = await getServerSession(authOptions)
+    if(!session)return
+
     const todo = formData.get("todo")
     if(!todo) return
     await pool.query(
-        'INSERT INTO todos (text,done) VALUES ($1,$2);',[todo,false]
+        'INSERT INTO todos (text,done,user_id) VALUES ($1,$2,$3);',[todo,false,session.user.id]
     )
     console.log('success')
 
@@ -24,18 +29,24 @@ export const addTodo = async (formData:FormData)=>{
 // }
 
 export const updateTodo = async(id:string)=>{
+    const session = await getServerSession(authOptions)
+    if(!session)return
+
     if(!id)return
     await pool.query(
-        'UPDATE todos SET done= NOT done WHERE ID = $1;',[id]
+        'UPDATE todos SET done= NOT done WHERE ID = $1 AND user_id = $2;',[id,session.user.id]
     )
     revalidatePath('/todos')
     // redirect('/todos')
 }
 
 export const deleteTodo = async(id:string)=>{
+    const session = await getServerSession(authOptions)
+    if(!session)return
+
     if(!id)return
     await pool.query(
-        'DELETE FROM todos WHERE ID = $1;',[id]
+        'DELETE FROM todos WHERE ID = $1 AND user_id = $2;',[id,session.user.id]
     )
     revalidatePath('/todos')
 }
