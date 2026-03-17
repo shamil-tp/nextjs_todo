@@ -2,6 +2,8 @@ import pool from "@/lib/db";
 import { updateTodo } from "@/actions/todo";
 import TodoButton from "./TodoButton";
 import TodoDelete from "./TodoDelete";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 type Todo = {
     id:string,
@@ -11,8 +13,11 @@ type Todo = {
 }
 
 export default async function TodoList(){
+    const session = await getServerSession(authOptions)
+    if(!session)return
+
     const {rows} =await pool.query<Todo>(
-        'SELECT * FROM todos ORDER BY created_at DESC'
+        'SELECT * FROM todos WHERE user_id = $1 ORDER BY created_at DESC;',[session.user.id]
     )
     return (
         <div className="todo__list flex flex-col gap-3">
