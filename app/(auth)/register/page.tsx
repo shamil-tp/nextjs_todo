@@ -1,13 +1,18 @@
-import { addNewUser } from "@/actions/todo"
+'use client'
 
-export const metadata = {
-  title: 'Register | Todo App'
-}
+import { addNewUser } from "@/actions/todo"
+import { useActionState } from "react"
 
 export default function LoginPage(){
+    const [state,formAction] = useActionState(addNewUser,null)
     return (
-        <form action={addNewUser} className="w-full bg-amber-100 rounded-2xl border-slate-500 border-2">
+        <form action={formAction} className="w-full bg-amber-100 rounded-2xl border-slate-500 border-2">
             <h1 className="text-center text-slate-800 font-extrabold text-3xl">Register</h1>
+            {state?.error && (
+        <p className="text-red-500 font-bold text-center p-2 bg-red-100 rounded-lg mx-2">
+          {state.error}
+        </p>
+      )}
             <div className="p-2">
                 <label htmlFor="name" className="text-slate-800 font-bold text-lg">Name</label>
                 <input type="text" name="name" className="w-full bg-slate-800 font-bold text-pink-500 rounded-sm h-10 p-1"/>

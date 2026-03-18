@@ -6,12 +6,13 @@ import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export const addTodo = async (formData:FormData)=>{
-    const session = await getServerSession(authOptions)
-    if(!session)return
+export const addTodo = async (prevState:{error:string}|null,formData:FormData)=>{
+    try{
+        const session = await getServerSession(authOptions)
+    if(!session)return {error:'Please Login to add todo'}
 
     const todo = formData.get("todo")
-    if(!todo) return
+    if(!todo) return {error:'Todo can not be empty'}
     await pool.query(
         'INSERT INTO todos (text,done,user_id) VALUES ($1,$2,$3);',[todo,false,session.user.id]
     )
@@ -19,6 +20,10 @@ export const addTodo = async (formData:FormData)=>{
 
     revalidatePath('/todos')
     redirect('/todos')
+    }catch(error){
+        console.log(error)
+        return {error:"Server Error -- Please try again later."}
+    }
 }
 // export const updateTodo = async(id:string)=>{
 //     if(!id)return
@@ -51,17 +56,19 @@ export const deleteTodo = async(id:string)=>{
     revalidatePath('/todos')
 }
 
-export const addNewUser = async(formData:FormData)=>{
-    const name = formData.get('name') as string
+
+export const addNewUser = async(prevState:{error:string} | null,formData:FormData)=>{
+    try{
+        const name = formData.get('name') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    if(!email || !name || !password)return
+    if(!email || !name || !password)return {error:'Please fill required fields'}
 
     const { rows } = await pool.query(
         'SELECT * FROM users WHERE email = $1',[email]
     )
-    if(rows[0])return
+    if(rows[0])return {error:'Email Already Exists'}
 
     const hashedPassword =await bcrypt.hash(password,10)
 
@@ -70,4 +77,8 @@ export const addNewUser = async(formData:FormData)=>{
         [name,email,hashedPassword]
     )
     redirect('/login')
+    }catch(error){
+        console.log(error)
+        return {error:'DB connection error'}
+    }
 }

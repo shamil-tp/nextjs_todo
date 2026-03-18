@@ -22,7 +22,8 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        try{
+          if (!credentials?.email || !credentials?.password) return null
 
         // find user in DB
         const { rows } = await pool.query(
@@ -36,6 +37,10 @@ export const authOptions: NextAuthOptions = {
         if (!isValid) return null
 
         return { id: user.id, email: user.email, name: user.name }
+        }catch(error){
+        console.log(error)
+        throw new Error('DatabaseError')
+      }
       }
     })
   ],

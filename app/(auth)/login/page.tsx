@@ -1,23 +1,32 @@
 'use client'
 import {signIn} from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function LoginPage(){ 
     const router = useRouter()
+    const [error,setError] = useState<string | null>(null)
 
     const handleLogin = async(formData:FormData)=>{
         const email = formData.get('email') as string
         const password = formData.get('password') as string
+
+        setError(null)
 
         const result = await signIn('credentials',{
             email,
             password,
             redirect:false,
         })
-        if(result?.error){
-            console.log('Login Failed')
-            return
-        }
+        if (result?.error) {
+  // result.error contains the error message
+  if (result.error === 'DatabaseError') {
+    setError('Server error — please try again later')
+  } else {
+    setError('Invalid Email or Password')
+  }
+  return
+}
         router.push('/')
     }
 
@@ -25,6 +34,11 @@ export default function LoginPage(){
     return (
         <form action={handleLogin} className="w-full bg-cyan-100 rounded-2xl h-full border-slate-500 border-2">
             <h1 className="text-center text-slate-800 font-extrabold text-3xl">Login</h1>
+            {error && (
+        <p className="text-red-500 font-bold text-center p-2 bg-red-100 rounded-lg mx-2">
+          {error}
+        </p>
+      )}
             <div className="p-2">
                 <label htmlFor="email" className="text-slate-800 font-bold text-lg">Email</label>
                 <input type="email" name="email" className="w-full bg-slate-800 font-bold text-pink-500 rounded-sm h-10 p-1"/>
@@ -38,7 +52,7 @@ export default function LoginPage(){
                 Reset
             </button>
                 <button className=" bg-slate-800 text-slate-200 font-extrabold text-lg rounded-lg h-10 w-[50%] border-2 border-amber-800 shadow-gray-500 hover:shadow-xs" type="submit">
-                Register
+                Login
             </button>
             </div>
         </form>

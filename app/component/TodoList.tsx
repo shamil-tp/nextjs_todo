@@ -1,5 +1,5 @@
 import pool from "@/lib/db";
-import { updateTodo } from "@/actions/todo";
+// import { updateTodo } from "@/actions/todo";
 import TodoButton from "./TodoButton";
 import TodoDelete from "./TodoDelete";
 import { getServerSession } from "next-auth";
