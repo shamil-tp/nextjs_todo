@@ -19,11 +19,12 @@ export const addTodo = async (prevState:{error:string}|null,formData:FormData)=>
     console.log('success')
 
     revalidatePath('/todos')
-    redirect('/todos')
     }catch(error){
         console.log(error)
         return {error:"Server Error -- Please try again later."}
     }
+    redirect('/todos')
+
 }
 // export const updateTodo = async(id:string)=>{
 //     if(!id)return
@@ -76,9 +77,10 @@ export const addNewUser = async(prevState:{error:string} | null,formData:FormDat
         'INSERT INTO users (username,email,password) VALUES($1,$2,$3)',
         [name,email,hashedPassword]
     )
-    redirect('/login')
     }catch(error){
         console.log(error)
         return {error:'DB connection error'}
     }
+    redirect('/login')
+
 }
